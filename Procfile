@@ -1,0 +1,1 @@
+web: java -jar ./build/libs/vema-backend-1.0.0.jar --spring.profiles.active=$SPRING_PROFILE
