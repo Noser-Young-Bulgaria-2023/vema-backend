@@ -22,6 +22,6 @@ public class ProductController {
     @GetMapping("/")
     public ResponseEntity<String> getProduct() {
         service.deleteAll();
-        return new ResponseEntity<String>("Hello Products!", HttpStatus.OK);
+        return new ResponseEntity<String>("Hello Product!", HttpStatus.OK);
     }
 }
