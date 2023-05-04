@@ -26,8 +26,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Test with Gradle
-      run: ./graldew test 
+      run: ./gradlew test 
   
     - name: Test with SonarQube
-      run: ./graldew build sonar
-      
+      run: ./gradlew build sonar
