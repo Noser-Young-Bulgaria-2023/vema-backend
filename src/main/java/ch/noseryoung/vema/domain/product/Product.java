@@ -3,7 +3,7 @@ package ch.noseryoung.vema.domain.product;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
+@Document("products")
 public class Product {
     @Id
     private String id;
