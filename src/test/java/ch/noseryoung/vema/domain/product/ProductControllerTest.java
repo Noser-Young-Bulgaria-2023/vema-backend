@@ -27,6 +27,9 @@ class ProductControllerTest {
     @MockBean
     private ProductService service;
 
+    @MockBean
+    ProductRepository repository;
+
     @Test
     void testCreate() throws Exception {
         String json = "{\"id\":\"321\", \"name\": \"Sprite\", \"price\": 3.99, \"amount\": 5}";
