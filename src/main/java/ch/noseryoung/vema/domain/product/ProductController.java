@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import ch.noseryoung.vema.domain.product.dto.ProductDTO;
+import ch.noseryoung.vema.domain.product.dto.ProductMapper;
 import ch.noseryoung.vema.domain.product.exceptions.ProductNotFoundException;
 import ch.noseryoung.vema.domain.product.exceptions.VendingMachineCapacityExceededException;
 
@@ -24,39 +26,42 @@ import ch.noseryoung.vema.domain.product.exceptions.VendingMachineCapacityExceed
 public class ProductController {
 
     private final ProductService service;
+    private final ProductMapper mapper;
 
     @Autowired
-    public ProductController(ProductService service) {
+    public ProductController(ProductService service, ProductMapper mapper) {
         super();
         this.service = service;
+        this.mapper = mapper;
     }
 
     @PostMapping({ "/", "" })
-    public ResponseEntity<Product> create(@RequestBody Product product) throws VendingMachineCapacityExceededException {
-        Product savedProduct = service.create(product);
+    public ResponseEntity<ProductDTO> create(@RequestBody ProductDTO productDTO)
+            throws VendingMachineCapacityExceededException {
+        Product savedProduct = service.create(mapper.fromDTO(productDTO));
 
-        return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
+        return new ResponseEntity<>(mapper.toDTO(savedProduct), HttpStatus.CREATED);
     }
 
     @GetMapping({ "", "/" })
-    public ResponseEntity<List<Product>> readAll() {
+    public ResponseEntity<List<ProductDTO>> readAll() {
         List<Product> products = service.readAll();
 
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        return new ResponseEntity<>(mapper.toDTOs(products), HttpStatus.OK);
     }
 
     @GetMapping({ "/{productId}/", "/{productId}" })
-    public ResponseEntity<Product> read(@PathVariable String productId) {
+    public ResponseEntity<ProductDTO> read(@PathVariable String productId) {
         Product product = service.read(productId);
 
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        return new ResponseEntity<>(mapper.toDTO(product), HttpStatus.OK);
     }
 
     @PutMapping({ "/{productId}/", "/{productId}" })
-    public ResponseEntity<Product> update(@PathVariable String productId, @RequestBody Product product) {
-        Product updatedProduct = service.update(productId, product);
+    public ResponseEntity<ProductDTO> update(@PathVariable String productId, @RequestBody ProductDTO productDTO) {
+        Product updatedProduct = service.update(productId, mapper.fromDTO(productDTO));
 
-        return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+        return new ResponseEntity<>(mapper.toDTO(updatedProduct), HttpStatus.OK);
     }
 
     @DeleteMapping({ "/{productId}/", "/{productId}" })

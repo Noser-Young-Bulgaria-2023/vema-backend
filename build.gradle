@@ -18,9 +18,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation group: 'org.springframework.data', name: 'spring-data-mongodb'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.0.6'
-
-
-	runtimeOnly 'org.postgresql:postgresql'
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+ 
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 
 	// Testing
 	testImplementation 'com.h2database:h2'
