@@ -1,4 +1,4 @@
-name: Java CI with Gradle
+name: Vema Backend CI
 
 on:
   push:
@@ -26,8 +26,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Test with Gradle
-      run: ./graldew test 
+      run: chmod +x ./gradlew && ./gradlew test 
   
     - name: Test with SonarQube
-      run: ./graldew build sonar
-      
+      run: ./gradlew build sonar -Dsonar.login=${{ secrets.SONAR_TOKEN }}
