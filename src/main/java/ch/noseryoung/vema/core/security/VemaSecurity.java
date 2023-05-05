@@ -9,6 +9,6 @@ public class VemaSecurity {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().anyRequest();
+        return web -> web.ignoring().anyRequest();
     }
 }
