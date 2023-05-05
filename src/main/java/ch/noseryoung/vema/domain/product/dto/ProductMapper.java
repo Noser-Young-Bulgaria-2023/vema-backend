@@ -3,7 +3,6 @@ package ch.noseryoung.vema.domain.product.dto;
 import java.util.List;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import ch.noseryoung.vema.domain.product.Product;
 
