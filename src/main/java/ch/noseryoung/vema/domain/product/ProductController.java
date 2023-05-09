@@ -21,7 +21,7 @@ import ch.noseryoung.vema.domain.product.exceptions.ProductNotFoundException;
 import ch.noseryoung.vema.domain.product.exceptions.VendingMachineCapacityExceededException;
 
 @Controller
-@RequestMapping("/product")
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductService service;
