@@ -28,9 +28,7 @@ public class ProductController {
     private final ProductService service;
     private final ProductMapper mapper;
 
-    @Autowired
     public ProductController(ProductService service, ProductMapper mapper) {
-        super();
         this.service = service;
         this.mapper = mapper;
     }
@@ -53,7 +51,6 @@ public class ProductController {
     @GetMapping({ "/{productId}/", "/{productId}" })
     public ResponseEntity<ProductDTO> read(@PathVariable String productId) {
         Product product = service.read(productId);
-
         return new ResponseEntity<>(mapper.toDTO(product), HttpStatus.OK);
     }
 

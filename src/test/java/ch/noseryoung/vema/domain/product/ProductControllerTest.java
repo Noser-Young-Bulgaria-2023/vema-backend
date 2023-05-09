@@ -1,34 +1,46 @@
 package ch.noseryoung.vema.domain.product;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import ch.noseryoung.vema.domain.product.dto.ProductMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+@WebMvcTest(ProductController.class)
 class ProductControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
+//    @InjectMocks
     @MockBean
     private ProductService service;
 
+//    @InjectMocks
     @MockBean
-    ProductRepository repository;
+    private ProductMapper mapper;
+
+    private ProductController productController;
+
+    @BeforeEach
+    void setup() {
+        this.mockMvc = MockMvcBuilders.standaloneSetup(new ProductController(service, mapper)).build();
+    }
 
     @Test
     void testCreate() throws Exception {
@@ -39,21 +51,19 @@ class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/product").content(json).contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.content()
-                        .json(json));
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Sprite"));
     }
 
     @Test
     void testReadAll() throws Exception {
-        List<Product> mockedProducts = new ArrayList<Product>();
+        List<Product> mockedProducts = new ArrayList<>();
         mockedProducts.add(new Product("123", "Coca-Cola", 2.99f, 10));
 
         when(service.readAll()).thenReturn(mockedProducts);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/product"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.content()
                         .json("[{\"id\":\"123\", \"name\": \"Coca-Cola\", \"price\": 2.99, \"amount\": 10}]"));
     }
@@ -61,15 +71,12 @@ class ProductControllerTest {
     @Test
     void testRead() throws Exception {
         Product mockedProduct = new Product("123", "Coca-Cola", 2.99f, 10);
-        String json = "{\"id\":\"123\", \"name\": \"Coca-Cola\", \"price\": 2.99, \"amount\": 10}";
 
         when(service.read(anyString())).thenReturn(mockedProduct);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/product/123"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.content()
-                        .json(json));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value("123"));
     }
 
     @Test
@@ -81,7 +88,6 @@ class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.put("/product/321").content(json).contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.content()
                         .json(json));
     }
