@@ -14,7 +14,6 @@ public class Product {
     private int amount;
 
     public Product(final String id, final String name, final float price, final int amount) {
-        super();
         this.id = id;
         this.name = name;
         this.price = price;
