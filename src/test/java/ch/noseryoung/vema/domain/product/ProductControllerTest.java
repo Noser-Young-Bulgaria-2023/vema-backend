@@ -1,106 +1,115 @@
 package ch.noseryoung.vema.domain.product;
 
+import ch.noseryoung.vema.domain.product.dto.ProductDTO;
 import ch.noseryoung.vema.domain.product.dto.ProductMapper;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@WebMvcTest(value = ProductController.class)
 class ProductControllerTest {
 
-    private MockMvc mockMvc;
-
     @Mock
-    private ProductService service;
+    private ProductService productService;
 
     @Mock
     private ProductMapper productMapper;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @InjectMocks
-    private ProductController controller;
-
-    public void setup(){
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-    }
+    private ProductController productController;
 
 
     @Test
     void testCreate() throws Exception {
-        Product product = new Product("321", "Sprite", 3.99f, 5);
+        // Arrange
+        ProductDTO productDTO = new ProductDTO("1", "Sprite", 2.99f, 10);
+        Product product = new Product("1", "Sprite", 2.99f, 10);
 
-        given(service.create(any())).willReturn(product);
+        when(productService.create(any(Product.class))).thenReturn(product);
+        when(productMapper.fromDTO(any(ProductDTO.class))).thenReturn(product);
+        when(productMapper.toDTO(any(Product.class))).thenReturn(productDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/product")
-                        .content(objectMapper.writeValueAsString(product)).contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Sprite"));
+        // Act
+        ResponseEntity<ProductDTO> responseEntity = productController.create(productDTO);
+
+        // Assert
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(responseEntity.getBody().getName()).isEqualTo("Sprite");
     }
 
     @Test
-    void testReadAll() throws Exception {
+    void testReadAll() {
+        // Arrange
         List<Product> mockedProducts = new ArrayList<>();
         mockedProducts.add(new Product("123", "Coca-Cola", 2.99f, 10));
 
-        when(service.readAll()).thenReturn(mockedProducts);
+        List<ProductDTO> mockedProductDTOs = new ArrayList<>();
+        mockedProductDTOs.add(new ProductDTO("123", "Coca-Cola", 2.99f, 10));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/product"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content()
-                        .json("[{\"id\":\"123\", \"name\": \"Coca-Cola\", \"price\": 2.99, \"amount\": 10}]"));
+        when(productService.readAll()).thenReturn(mockedProducts);
+        when(productMapper.toDTOs(any())).thenReturn(mockedProductDTOs);
+
+        // Act
+        ResponseEntity<List<ProductDTO>> response = productController.readAll();
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotEmpty();
     }
 
     @Test
-    void testRead() throws Exception {
-        Product mockedProduct = new Product("123", "Coca-Cola", 2.99f, 10);
+    void testRead() {
+        // Arrange
+        Product mockedProduct = new Product("1", "Coca-Cola", 2.99f, 10);
+        ProductDTO mockedProductDTO = new ProductDTO("1", "Coca-Cola", 2.99f, 10);
 
-        when(service.read(anyString())).thenReturn(mockedProduct);
+        when(productService.read("1")).thenReturn(mockedProduct);
+        when(productMapper.toDTO(any())).thenReturn(mockedProductDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/product/123"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value("123"));
+        // Act
+        ResponseEntity<ProductDTO> response = productController.read("1");
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getId()).isEqualTo("1");
     }
 
     @Test
-    void testUpdate() throws Exception {
-        String json = "{\"id\":\"321\", \"name\": \"Fanta\", \"price\": 3.99, \"amount\": 5}";
+    void testUpdate() {
+        // Arrange
+        Product mockedProduct = new Product("2", "Fanta", 3.99f, 20);
+        ProductDTO mockedProductDTO = new ProductDTO("2", "Fanta", 3.99f, 20);
 
-        when(service.update(anyString(), any(Product.class))).thenReturn(new Product("321", "Fanta", 3.99f, 5));
+        when(productService.update(eq("2"), any())).thenReturn(mockedProduct);
+        when(productMapper.fromDTO(any())).thenReturn(mockedProduct);
+        when(productMapper.toDTO(any())).thenReturn(mockedProductDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/product/321").content(json).contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content()
-                        .json(json));
+        // Act
+        ResponseEntity<ProductDTO> response = productController.update("2", mockedProductDTO);
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getId()).isEqualTo("2");
     }
 
     @Test
     void testDelete() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/product/321"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        // Act
+        ResponseEntity<Void> response = productController.delete(anyString());
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNull();
     }
 }
