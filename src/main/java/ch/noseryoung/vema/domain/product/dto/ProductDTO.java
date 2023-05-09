@@ -1,31 +1,16 @@
-package ch.noseryoung.vema.domain.product;
+package ch.noseryoung.vema.domain.product.dto;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
-public class Product {
-
-    @Id
+public class ProductDTO {
     private String id;
-
     private String name;
     private float price;
     private int amount;
 
-    public Product(final String id, final String name, final float price, final int amount) {
+    public ProductDTO(String id, String name, float price, int amount) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.amount = amount;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getId() {
@@ -44,6 +29,14 @@ public class Product {
         this.amount = amount;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public float getPrice() {
         return price;
     }
@@ -51,4 +44,5 @@ public class Product {
     public void setPrice(float price) {
         this.price = price;
     }
+
 }
