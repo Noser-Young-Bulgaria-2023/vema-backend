@@ -25,8 +25,8 @@ import ch.noseryoung.vema.domain.product.exceptions.VendingMachineCapacityExceed
 @RequestMapping("/product")
 public class ProductController {
 
-    private final ProductService service;
-    private final ProductMapper mapper;
+    private ProductService service;
+    private ProductMapper mapper;
 
     public ProductController(ProductService service, ProductMapper mapper) {
         this.service = service;

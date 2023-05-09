@@ -1,12 +1,14 @@
 package ch.noseryoung.vema.domain.product;
 
 import ch.noseryoung.vema.domain.product.dto.ProductMapper;
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -19,37 +21,41 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
-@WebMvcTest(ProductController.class)
+@ExtendWith(MockitoExtension.class)
+@WebMvcTest(value = ProductController.class)
 class ProductControllerTest {
 
-    @Autowired
     private MockMvc mockMvc;
 
-//    @InjectMocks
-    @MockBean
+    @Mock
     private ProductService service;
 
-//    @InjectMocks
-    @MockBean
-    private ProductMapper mapper;
+    @Mock
+    private ProductMapper productMapper;
 
-    private ProductController productController;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    @BeforeEach
-    void setup() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(new ProductController(service, mapper)).build();
+    @InjectMocks
+    private ProductController controller;
+
+    public void setup(){
+        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
+
 
     @Test
     void testCreate() throws Exception {
-        String json = "{\"id\":\"321\", \"name\": \"Sprite\", \"price\": 3.99, \"amount\": 5}";
+        Product product = new Product("321", "Sprite", 3.99f, 5);
 
-        when(service.create(any())).thenReturn(new Product("321", "Sprite", 3.99f, 5));
+        given(service.create(any())).willReturn(product);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/product").content(json).contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(MockMvcRequestBuilders.post("/product")
+                        .content(objectMapper.writeValueAsString(product)).contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Sprite"));
