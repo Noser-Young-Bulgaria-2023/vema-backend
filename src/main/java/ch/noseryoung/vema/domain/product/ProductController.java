@@ -2,7 +2,6 @@ package ch.noseryoung.vema.domain.product;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,8 +24,8 @@ import ch.noseryoung.vema.domain.product.exceptions.VendingMachineCapacityExceed
 @RequestMapping("/product")
 public class ProductController {
 
-    private ProductService service;
-    private ProductMapper mapper;
+    private final ProductService service;
+    private final ProductMapper mapper;
 
     public ProductController(ProductService service, ProductMapper mapper) {
         this.service = service;
