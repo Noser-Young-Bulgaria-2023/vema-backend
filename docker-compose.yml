@@ -1,16 +1,10 @@
-version: '3.8'
-
+version: "3.9"
 services:
-
-  mongo:
-    image: mongo
-    container_name: vema-backend
-    hostname: mongo
-    restart: unless-stopped
-    ports:
-      - 27017:27017
+  database:
+    image: mongo:6-jammy
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_INITDB_DATABASE: vemadb
-    command: ["--bind_ip", "0.0.0.0"]
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - MONGO_INITDB_DATABASE=vema
+    ports:
+      - '27017:27017'

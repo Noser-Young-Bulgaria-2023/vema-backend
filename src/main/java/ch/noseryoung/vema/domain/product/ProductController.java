@@ -2,11 +2,18 @@ package ch.noseryoung.vema.domain.product;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import ch.noseryoung.vema.domain.product.dto.ProductDTO;
 import ch.noseryoung.vema.domain.product.dto.ProductMapper;
@@ -14,16 +21,13 @@ import ch.noseryoung.vema.domain.product.exceptions.ProductNotFoundException;
 import ch.noseryoung.vema.domain.product.exceptions.VendingMachineCapacityExceededException;
 
 @Controller
-@CrossOrigin
-@RequestMapping("/product")
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductService service;
     private final ProductMapper mapper;
 
-    @Autowired
     public ProductController(ProductService service, ProductMapper mapper) {
-        super();
         this.service = service;
         this.mapper = mapper;
     }
@@ -46,7 +50,6 @@ public class ProductController {
     @GetMapping({ "/{productId}/", "/{productId}" })
     public ResponseEntity<ProductDTO> read(@PathVariable String productId) {
         Product product = service.read(productId);
-
         return new ResponseEntity<>(mapper.toDTO(product), HttpStatus.OK);
     }
 
