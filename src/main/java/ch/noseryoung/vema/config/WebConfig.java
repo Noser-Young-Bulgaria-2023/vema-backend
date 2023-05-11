@@ -18,7 +18,6 @@ public class WebConfig {
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
-        System.out.println("Allowed origin: " + frontendOrigin);
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
