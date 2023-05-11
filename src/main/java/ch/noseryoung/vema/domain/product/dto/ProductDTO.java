@@ -1,16 +1,31 @@
 package ch.noseryoung.vema.domain.product.dto;
 
+import org.bson.types.Binary;
+
 public class ProductDTO {
     private String id;
     private String name;
     private float price;
     private int amount;
+    private Binary image;
 
-    public ProductDTO(String id, String name, float price, int amount) {
+    public ProductDTO(String id, String name, float price, int amount, Binary image) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.amount = amount;
+        this.image = image;
+    }
+
+    public ProductDTO() {
+    }
+
+    public Binary getImage() {
+        return image;
+    }
+
+    public void setImage(Binary image) {
+        this.image = image;
     }
 
     public String getId() {
