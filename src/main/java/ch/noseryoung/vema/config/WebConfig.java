@@ -1,5 +1,6 @@
 package ch.noseryoung.vema.config;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ public class WebConfig {
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
+        System.out.println("Allowed origin: " + frontendOrigin);
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
