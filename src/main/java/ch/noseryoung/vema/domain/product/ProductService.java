@@ -14,7 +14,7 @@ public interface ProductService {
 
     List<Product> readAll();
 
-    Product update(String id, Product product);
+    Product update(String id, Product product, MultipartFile productImage) throws IOException;
 
     void delete(String id);
 }

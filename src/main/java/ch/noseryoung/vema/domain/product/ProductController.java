@@ -48,8 +48,9 @@ public class ProductController {
     }
 
     @PutMapping({ "/{productId}/", "/{productId}" })
-    public ResponseEntity<ProductDTO> update(@PathVariable String productId, @RequestBody ProductDTO productDTO) {
-        Product updatedProduct = service.update(productId, mapper.fromDTO(productDTO));
+    public ResponseEntity<ProductDTO> update(@PathVariable String productId, @RequestPart("product-image") MultipartFile productImage,
+                                             @RequestPart("product") ProductDTO productDTO) throws IOException {
+        Product updatedProduct = service.update(productId, mapper.fromDTO(productDTO), productImage);
 
         return new ResponseEntity<>(mapper.toDTO(updatedProduct), HttpStatus.OK);
     }

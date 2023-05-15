@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,17 +89,17 @@ class ProductControllerTest {
     }
 
     @Test
-    void testUpdate() {
+    void testUpdate() throws IOException {
         // Arrange
         Product mockedProduct = new Product("2", "Fanta", 3.99f, 20, null);
         ProductDTO mockedProductDTO = new ProductDTO("2", "Fanta", 3.99f, 20, null);
 
-        when(productService.update(eq("2"), any())).thenReturn(mockedProduct);
+        when(productService.update(eq("2"), any(), any())).thenReturn(mockedProduct);
         when(productMapper.fromDTO(any())).thenReturn(mockedProduct);
         when(productMapper.toDTO(any())).thenReturn(mockedProductDTO);
 
         // Act
-        ResponseEntity<ProductDTO> response = productController.update("2", mockedProductDTO);
+        ResponseEntity<ProductDTO> response = productController.update("2", null, mockedProductDTO);
 
         // Assert
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);

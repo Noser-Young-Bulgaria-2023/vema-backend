@@ -54,8 +54,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product update(String id, Product product) {
+    public Product update(String id, Product product, MultipartFile productImage) throws IOException {
         product.setId(id);
+        product.setImage(new Binary(BsonBinarySubType.BINARY, productImage.getBytes()));
         return repository.save(product);
     }
 

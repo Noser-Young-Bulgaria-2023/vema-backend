@@ -70,14 +70,14 @@ class ProductServiceTest {
     }
 
     @Test
-    void testUpdate() {
+    void testUpdate() throws IOException {
         // Arrange
         Product product = new Product("1", "Club-Mate", 4.99f, 10, null);
 
         when(productRepository.save(product)).thenReturn(product);
 
         // Act
-        Product result = productService.update("1", product);
+        Product result = productService.update("1", product, null);
 
         // Assert
         assertThat(result).isEqualTo(product);
