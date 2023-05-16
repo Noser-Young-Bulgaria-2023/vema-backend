@@ -1,6 +1,7 @@
 package ch.noseryoung.vema.domain.coin;
 
 import java.math.BigDecimal;
+import java.util.NoSuchElementException;
 
 public enum CoinValueEnum {
   TEN_ST(BigDecimal.valueOf(0.1)),
@@ -25,5 +26,6 @@ public enum CoinValueEnum {
         return coinValueEnum;
       }
     }
+    throw new NoSuchElementException(String.format("Enum value {value} not found", value));
   }
 }
