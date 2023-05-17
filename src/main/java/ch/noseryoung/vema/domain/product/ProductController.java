@@ -1,17 +1,18 @@
 package ch.noseryoung.vema.domain.product;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import ch.noseryoung.vema.domain.product.dto.ProductDTO;
 import ch.noseryoung.vema.domain.product.dto.ProductMapper;
 import ch.noseryoung.vema.domain.product.exceptions.ProductNotFoundException;
 import ch.noseryoung.vema.domain.product.exceptions.VendingMachineCapacityExceededException;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/products")
@@ -27,9 +28,10 @@ public class ProductController {
     }
 
     @PostMapping({ "/", "" })
-    public ResponseEntity<ProductDTO> create(@RequestBody ProductDTO productDTO)
-            throws VendingMachineCapacityExceededException {
-        Product savedProduct = service.create(mapper.fromDTO(productDTO));
+    public ResponseEntity<ProductDTO> create(@RequestPart("product-image") MultipartFile productImage,
+                                             @RequestPart("product") ProductDTO productDTO)
+            throws VendingMachineCapacityExceededException, IOException {
+        Product savedProduct = service.create(productImage, mapper.fromDTO(productDTO));
 
         return new ResponseEntity<>(mapper.toDTO(savedProduct), HttpStatus.CREATED);
     }
@@ -48,8 +50,9 @@ public class ProductController {
     }
 
     @PutMapping({ "/{productId}/", "/{productId}" })
-    public ResponseEntity<ProductDTO> update(@PathVariable String productId, @RequestBody ProductDTO productDTO) {
-        Product updatedProduct = service.update(productId, mapper.fromDTO(productDTO));
+    public ResponseEntity<ProductDTO> update(@PathVariable String productId, @RequestPart("product-image") MultipartFile productImage,
+                                             @RequestPart("product") ProductDTO productDTO) throws IOException {
+        Product updatedProduct = service.update(productId, mapper.fromDTO(productDTO), productImage);
 
         return new ResponseEntity<>(mapper.toDTO(updatedProduct), HttpStatus.OK);
     }

@@ -10,19 +10,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebMvc
-public class WebConfig {
+public class WebConfig implements WebMvcConfigurer{
 
     @Value("${vema.application.frontend.origin}")
     private String frontendOrigin;
 
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins(frontendOrigin);
-            }
-        };
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins(frontendOrigin)
+                .allowedMethods("*")
+                .allowedHeaders("*");
     }
 }
