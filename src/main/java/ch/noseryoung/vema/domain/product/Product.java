@@ -13,6 +13,9 @@ public class Product {
     private float price;
     private int amount;
 
+    public Product() {
+    }
+
     public Product(final String id, final String name, final float price, final int amount) {
         this.id = id;
         this.name = name;

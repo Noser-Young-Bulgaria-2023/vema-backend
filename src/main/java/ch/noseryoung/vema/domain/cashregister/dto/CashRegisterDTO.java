@@ -13,6 +13,9 @@ public class CashRegisterDTO {
 
   private List<CoinDTO> coinsInInternalStorage;
 
+  public CashRegisterDTO() {
+  }
+
   public CashRegisterDTO(String id, List<CoinDTO> coinsInDeposit, List<CoinDTO> coinsInInternalStorage) {
     this.id = id;
     this.coinsInDeposit = coinsInDeposit;

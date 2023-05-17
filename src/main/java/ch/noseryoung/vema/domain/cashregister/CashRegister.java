@@ -16,6 +16,9 @@ public class CashRegister {
 
   private List<Coin> coinsInInternalStorage;
 
+  public CashRegister() {
+  }
+
   public CashRegister(String id, List<Coin> coinsInDeposit, List<Coin> coinsInInternalStorage) {
     this.id = id;
     this.coinsInDeposit = coinsInDeposit;
