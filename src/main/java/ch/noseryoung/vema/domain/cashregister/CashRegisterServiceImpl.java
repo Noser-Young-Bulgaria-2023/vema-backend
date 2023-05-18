@@ -1,5 +1,6 @@
 package ch.noseryoung.vema.domain.cashregister;
 
+import ch.noseryoung.vema.domain.coin.Coin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,13 @@ public class CashRegisterServiceImpl implements CashRegisterService{
       return repository.save(updatedCashRegister);
     }
     throw new RuntimeException("Bad request");
+  }
+
+  @Override
+  public CashRegister insertCoinById(String id, Coin coin) {
+    CashRegister updatedCashRegister = repository.findById(id).orElseThrow(NoSuchElementException::new);
+    updatedCashRegister.getCoinsInDeposit().add(coin);
+    return repository.save(updatedCashRegister);
   }
 
   @Override

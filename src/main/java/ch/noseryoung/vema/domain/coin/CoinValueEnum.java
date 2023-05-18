@@ -22,7 +22,7 @@ public enum CoinValueEnum {
 
   public static CoinValueEnum get(BigDecimal value) {
     for (CoinValueEnum coinValueEnum : values()) {
-      if(coinValueEnum.getValue() == value) {
+      if(coinValueEnum.getValue().equals(value)) {
         return coinValueEnum;
       }
     }

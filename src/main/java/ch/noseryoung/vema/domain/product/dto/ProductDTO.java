@@ -20,9 +20,6 @@ public class ProductDTO {
         this.image = image;
     }
 
-    public ProductDTO() {
-    }
-
     public Binary getImage() {
         return image;
     }

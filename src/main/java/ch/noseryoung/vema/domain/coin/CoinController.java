@@ -33,7 +33,7 @@ public class CoinController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<CoinDTO> getById(@RequestParam String id) {
+  public ResponseEntity<CoinDTO> getById(@PathVariable String id) {
     Coin coin = service.getById(id);
     return new ResponseEntity<>(mapper.toDTO(coin), HttpStatus.OK);
   }
@@ -45,13 +45,13 @@ public class CoinController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<CoinDTO> updateById(@RequestParam String id, @RequestBody CoinDTO coinDTO) {
+  public ResponseEntity<CoinDTO> updateById(@PathVariable String id, @RequestBody CoinDTO coinDTO) {
     Coin updatedCoin = service.updateById(id, mapper.fromDTO(coinDTO));
     return new ResponseEntity<>(mapper.toDTO(updatedCoin), HttpStatus.OK);
   }
 
    @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteById(@RequestParam String id) {
+  public ResponseEntity<Void> deleteById(@PathVariable String id) {
     service.deleteById(id);
     return new ResponseEntity<>(HttpStatus.OK);
    }
