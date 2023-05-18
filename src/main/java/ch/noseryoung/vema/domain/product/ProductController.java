@@ -3,6 +3,7 @@ package ch.noseryoung.vema.domain.product;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ public class ProductController {
     private final ProductService service;
     private final ProductMapper mapper;
 
+    @Autowired
     public ProductController(ProductService service, ProductMapper mapper) {
         this.service = service;
         this.mapper = mapper;

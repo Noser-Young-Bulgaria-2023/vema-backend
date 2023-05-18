@@ -13,6 +13,9 @@ public class Product {
     private int amount;
     private Binary image;
 
+    public Product() {
+    }
+
     public Product(String id, String name, float price, int amount, Binary image) {
         this.id = id;
         this.name = name;
